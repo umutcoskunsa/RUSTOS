@@ -1,0 +1,40 @@
+# Phase 4 Report: Memory Management & Global Heap Allocator
+
+Phase 4 of the Operating System architecture is fully complete. We have successfully enabled reading BIOS memory maps, designed basic frame allocators, traversed hierarchical recursive paging setups safely, and mapped appropriate ranges to sustain standard `alloc` Dynamic Vector allocations.
+
+## Implemented Steps
+
+1. **BIOS memory map (E820)**
+   - Modified `stage2.asm` to query standard memory maps from INT 15h BIOS parameters.
+   - Parsed address lists inside early Rust framing buffers flawlessly.
+
+2. **Physical Frame Allocator**
+   - Constructed `memory::BootFrameAllocator` sustaining consecutive Frame allocations.
+
+3. **Page Table recursive addressing**
+   - Loaded recursive PML4 index self-referencing branches in assembly.
+   - Resolved correct coordinates within modern addressing offsets cleanly.
+
+4. **Global Heap Allocator**
+   - Isolated Virtual Address boundaries mapped directly utilizing consecutive allocated frame addresses.
+   - Created static definitions unlocking full functionality of `alloc::vec::Vec` structures successfully.
+
+---
+
+## Technical Blockers & Issue Resolutions
+
+A series of complex early load lockups and silence behaviors was diagnosed during this phase upon combining allocation frameworks. Linear disassemblies isolated absolute fixes as described:
+
+- **ELF Dynamic Relocations Model Failure** 
+  Standard compiling models defaulted to dynamic position-independent position templates. Standard flat binary dumps strip dynamic relocations, forcing garbage addresses reads before printing.
+  - **Fix**: Appended static relocation variables (` RUSTFLAGS="-C relocation-model=static"`) inside `Makefile` compiles.
+
+- **Missing Section Loads**
+  Cargo's Standard ELFs discarded absolute code triggers lacking explicit addressing nodes bounds.
+  - **Fix**: Appended absolute `-Tlinker.ld` specifications inside core build definitions.
+
+- **Continuous Lockup Frames**
+  Residual RAM buffers left `.bss` frames un-zeroed on hardware loads prevents Spinlock increments for VGA Writer structures correctly.
+  - **Fix**: Appended absolute early zeroing `.ptr::write_bytes` instruction inside `kernel_main` prologue maps accurately.
+
+OS load outputs verified with standard dynamic Vector allocations sequentially. Ready to proceed with following subsystems structures.

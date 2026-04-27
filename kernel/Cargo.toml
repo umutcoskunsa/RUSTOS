@@ -1,0 +1,23 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+edition = "2024"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+volatile = "0.2.6"
+lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
+spin = "0.5.2"
+uart_16550 = "0.3.0"
+x86_64 = "0.14.10"
+pic8259 = "0.10.1"
+pc-keyboard = "0.7.0"
+crossbeam-queue = { version = "0.3.11", default-features = false, features = ["alloc"] }
+conquer-once = { version = "0.2.0", default-features = false }
+futures-util = { version = "0.3.28", default-features = false, features = ["alloc"] }
+acpi = "4.1.1"
