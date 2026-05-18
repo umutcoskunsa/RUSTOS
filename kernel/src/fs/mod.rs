@@ -19,6 +19,9 @@ pub trait FileSystem: Send + Sync {
     fn create_symlink(&self, path: &str, target: &str, uid: u16, gid: u16) -> bool;
     fn chmod(&self, path: &str, mode: u16, uid: u16, gid: u16) -> bool;
     fn chown(&self, path: &str, new_uid: u16, new_gid: u16, uid: u16, gid: u16) -> bool;
+    fn analyze_fragmentation(&self) -> String {
+        String::from("Fragmentation analysis not supported on this filesystem.")
+    }
 }
 
 lazy_static! {
@@ -182,6 +185,11 @@ pub fn chown(path: &str, new_uid: u16, new_gid: u16) -> bool {
     let uid = *CURRENT_UID.lock();
     let gid = *CURRENT_GID.lock();
     fs.chown(&rel, new_uid, new_gid, uid, gid)
+}
+
+pub fn analyze_fragmentation(path: &str) -> String {
+    let (_, fs) = find_mount(path);
+    fs.analyze_fragmentation()
 }
 
 pub fn list_root() -> Vec<String> {

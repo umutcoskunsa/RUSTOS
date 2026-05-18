@@ -270,6 +270,12 @@ fn handle_command(cmd: &str) {
             let gid = *crate::fs::CURRENT_GID.lock();
             crate::println!("UID: {}, GID: {}", uid, gid);
         }
+        "frag" => {
+            let path = if parts.len() > 1 { parts[1].trim() } else { "/data" };
+            crate::println!("Analyzing fragmentation for filesystem at '{}'...", path);
+            let report = crate::fs::analyze_fragmentation(path);
+            crate::println!("{}", report);
+        }
         "uname" => crate::println!("MYNEWOS 0.1.0 (x86_64) - Built with Rust "),
         other  => crate::println!("Unknown command: '{}'. Type 'help'.", other),
     }
@@ -290,6 +296,7 @@ fn cmd_help() {
     crate::println!("  chown <u:g> <p> - Change file owner/group");
     crate::println!("  su <uid>        - Switch current user");
     crate::println!("  whoami          - Print current user identity");
+    crate::println!("  frag [path]     - Check filesystem fragmentation");
     crate::println!("  nettest         - Send a UDP packet to 10.0.2.2:8080");
     crate::println!("  gfxtest         - Paint a test gradient on the framebuffer");
 }

@@ -97,6 +97,37 @@ pub struct DirEntry {
 
 pub use alloc::collections::BTreeMap;
 
+/// Ext4 Extent Header
+#[repr(C, packed)]
+#[derive(Debug, Copy, Clone)]
+pub struct Ext4ExtentHeader {
+    pub eh_magic:      u16,
+    pub eh_entries:    u16,
+    pub eh_max:        u16,
+    pub eh_depth:      u16,
+    pub eh_generation: u32,
+}
+
+/// Ext4 Extent (Leaf Node)
+#[repr(C, packed)]
+#[derive(Debug, Copy, Clone)]
+pub struct Ext4Extent {
+    pub ee_block:    u32,
+    pub ee_len:      u16,
+    pub ee_start_hi: u16,
+    pub ee_start_lo: u32,
+}
+
+/// Ext4 Extent Index (Internal Node)
+#[repr(C, packed)]
+#[derive(Debug, Copy, Clone)]
+pub struct Ext4ExtentIdx {
+    pub ei_block:   u32,
+    pub ei_leaf_lo: u32,
+    pub ei_leaf_hi: u16,
+    pub ei_unused:  u16,
+}
+
 /// A simple block cache to avoid redundant disk I/O.
 struct BlockCache {
     entries: BTreeMap<u32, Vec<u8>>,
@@ -690,6 +721,10 @@ impl Ext2Fs {
     }
 
     pub fn get_block_id(&self, inode: &Inode, logical_block: u32) -> Option<u32> {
+        if (inode.i_flags & 0x00080000) != 0 {
+            return self.get_extent_block_id(inode, logical_block);
+        }
+
         let block_size = self.inner.lock().block_size;
         let ptrs_per_block = block_size / 4;
         if logical_block < 12 { return Some(inode.i_block[logical_block as usize]); }
@@ -747,8 +782,72 @@ impl Ext2Fs {
         None
     }
 
+    fn get_extent_block_id(&self, inode: &Inode, logical_block: u32) -> Option<u32> {
+        let mut header = unsafe { core::ptr::read_unaligned(inode.i_block.as_ptr() as *const Ext4ExtentHeader) };
+        if header.eh_magic != 0xF30A {
+            return None;
+        }
+
+        let mut current_data = alloc::vec::Vec::new();
+        let mut current_ptr = inode.i_block.as_ptr() as *const u8;
+        
+        loop {
+            if header.eh_depth == 0 {
+                // Leaf node
+                let extents = unsafe {
+                    core::slice::from_raw_parts(
+                        current_ptr.add(core::mem::size_of::<Ext4ExtentHeader>()) as *const Ext4Extent,
+                        header.eh_entries as usize
+                    )
+                };
+                
+                for ext in extents {
+                    if logical_block >= ext.ee_block && logical_block < ext.ee_block + (ext.ee_len as u32) {
+                        let phys_block = ext.ee_start_lo + (logical_block - ext.ee_block);
+                        return Some(phys_block);
+                    }
+                }
+                return None;
+            } else {
+                // Index node
+                let indexes = unsafe {
+                    core::slice::from_raw_parts(
+                        current_ptr.add(core::mem::size_of::<Ext4ExtentHeader>()) as *const Ext4ExtentIdx,
+                        header.eh_entries as usize
+                    )
+                };
+                
+                let mut next_block = 0;
+                for idx in indexes {
+                    if logical_block >= idx.ei_block {
+                        next_block = idx.ei_leaf_lo;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if next_block == 0 { return None; }
+                
+                current_data = match self.read_block(next_block) {
+                    Some(data) => data,
+                    None => return None,
+                };
+                current_ptr = current_data.as_ptr();
+                header = unsafe { core::ptr::read_unaligned(current_ptr as *const Ext4ExtentHeader) };
+                if header.eh_magic != 0xF30A { return None; }
+            }
+        }
+    }
+
     fn ensure_block_id(&self, inode_id: u32, logical_block: u32) -> Option<u32> {
         let mut inode = self.read_inode(inode_id)?;
+        
+        // Write support for Ext4 Extents is not implemented.
+        if (inode.i_flags & 0x00080000) != 0 {
+            crate::serial_println!("EXT4: Write to extent-based file is not supported.");
+            return None;
+        }
+
         let block_size = self.inner.lock().block_size;
         let ptrs_per_block = block_size / 4;
         
@@ -1227,6 +1326,60 @@ impl FileSystem for Ext2Fs {
             }
         }
         false
+    }
+
+    fn analyze_fragmentation(&self) -> String {
+        let sb = self.inner.lock().superblock;
+        let block_size = self.inner.lock().block_size;
+        
+        let mut total_files = 0;
+        let mut total_blocks = 0;
+        let mut total_sequences = 0;
+
+        // Iterate through all inodes
+        for inode_id in 1..=sb.s_inodes_count {
+            if let Some(inode) = self.read_inode(inode_id) {
+                // Check if inode is in use (has links and mode is not 0)
+                if inode.i_links_count > 0 && inode.i_mode != 0 {
+                    // Only care about regular files and directories (skip fast symlinks and specials)
+                    let file_type = inode.i_mode & 0xF000;
+                    if file_type == 0x8000 || file_type == 0x4000 {
+                        total_files += 1;
+                        let file_blocks = (inode.i_size + block_size - 1) / block_size;
+                        if file_blocks == 0 { continue; }
+                        
+                        let mut prev_block_id = None;
+                        for i in 0..file_blocks {
+                            if let Some(block_id) = self.get_block_id(&inode, i) {
+                                if block_id != 0 {
+                                    total_blocks += 1;
+                                    match prev_block_id {
+                                        Some(prev) if block_id == prev + 1 => {} // Contiguous
+                                        _ => total_sequences += 1, // New sequence
+                                    }
+                                    prev_block_id = Some(block_id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if total_blocks == 0 {
+            return String::from("Ext2: No file data blocks to analyze.");
+        }
+
+        // Calculate fragmentation
+        // Ideally, sequences == total_files (1 contiguous extent per file)
+        let extra_fragments = if total_sequences > total_files { total_sequences - total_files } else { 0 };
+        let frag_percent = (extra_fragments as f64 / total_blocks as f64) * 100.0;
+        let frag_percent_int = frag_percent as u32;
+
+        alloc::format!(
+            "Ext2 Health Report:\n- Total Files Checked: {}\n- Total Data Blocks: {}\n- Contiguous Extents: {}\n- Fragmentation Score: {}% ({} extra fragments)",
+            total_files, total_blocks, total_sequences, frag_percent_int, extra_fragments
+        )
     }
 }
 

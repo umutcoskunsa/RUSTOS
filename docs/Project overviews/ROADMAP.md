@@ -57,7 +57,7 @@ Focus: Making the OS usable for real applications.
 ## Phase 8: Beyond (📍 WE ARE HERE)
 - [x] Network Stack: RTL8139 / VirtIO driver, ARP, IP, UDP, TCP.
 - [x] Graphics Engine: VESA/VBE framebuffer, pixel drawing, 8×8 bitmap font, fill_rect, clear.
-- [ ] ext2 Filesystem: A real Linux-compatible filesystem.
+- [x] ext2 Filesystem: A real Linux-compatible filesystem.
 - [x] Advanced Memory Management: User-space dynamic memory mapping (`mmap` / `sbrk`).
 - [x] Port a C standard library (newlib/musl) to run real programs (Implemented custom libc).
 

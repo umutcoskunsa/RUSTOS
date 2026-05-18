@@ -46,8 +46,8 @@ This plan outlines the transition from a hardcoded FAT32 driver to a multi-files
 - [x] **Symbolic Links (Symlinks)**: Support for soft links and path redirection. (DONE)
 - [x] **Kernel-side Formatting (mkfs)**: Ability to format a raw disk as Ext2 from the shell. (DONE)
 - [x] **Permissions Enforcement**: Enforce UID/GID and mode bits (read/write/execute) in the VFS. (DONE)
-- [ ] **Fragmentation Analysis**: Tool to check filesystem health/fragmentation. (NEXT)
-- [ ] **Ext4 Extent Support**: Basic read-only support for modern Ext4 extent-based files.
+- [x] **Fragmentation Analysis**: Tool to check filesystem health/fragmentation. (DONE)
+- [x] **Ext4 Extent Support**: Basic read-only support for modern Ext4 extent-based files. (DONE)
 
 ---
 
