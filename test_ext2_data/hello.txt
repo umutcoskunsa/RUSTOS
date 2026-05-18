@@ -1,0 +1,1 @@
+Hello from the ext2 filesystem! This file was injected during the build process.

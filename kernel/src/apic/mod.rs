@@ -15,6 +15,15 @@ pub fn end_of_interrupt() {
     }
 }
 
+pub fn local_id() -> u32 {
+    let base = LAPIC_BASE.load(Ordering::Relaxed);
+    if base == 0 { return 0; }
+    unsafe {
+        let id_ptr = (base + 0x20) as *const u32;
+        id_ptr.read_volatile() >> 24
+    }
+}
+
 pub fn init() {
     crate::serial_println!("APIC: Initializing ACPI and APIC...");
 
@@ -97,4 +106,23 @@ pub fn init() {
             panic!("APIC is not supported by this hardware!");
         }
     }
+}
+
+pub fn route_irq(irq: u8, vector: u8) {
+    // Assuming single IOAPIC at known address (parsed from ACPI earlier)
+    // Normally we should store ioapic_addr globally. We will map to the standard IOAPIC base 0xFEC00000.
+    let ioapic_addr = 0xFEC00000u64;
+    let ioregsel = ioapic_addr as *mut u32;
+    let iowin = (ioapic_addr + 0x10) as *mut u32;
+
+    unsafe {
+        // Write lower 32 bits (Vector)
+        ioregsel.write_volatile(0x10 + ((irq as u32) * 2));
+        iowin.write_volatile(vector as u32);
+
+        // Write upper 32 bits (Destination LAPIC = 0)
+        ioregsel.write_volatile(0x10 + ((irq as u32) * 2) + 1);
+        iowin.write_volatile(0);
+    }
+    crate::serial_println!("APIC: Routed IRQ {} to Vector {}", irq, vector);
 }

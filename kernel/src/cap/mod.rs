@@ -1,16 +1,11 @@
-/// cap — the MYNEWOS text editor
+/// cap - the MYNEWOS text editor
 /// Controls: Arrow keys to move | Backspace/Delete to erase | Enter for newline
 ///           Ctrl+S (F2) to save | Esc to quit without saving
 use alloc::string::String;
 use alloc::vec::Vec;
 use crate::vga_buffer::{Color, ColorCode, WRITER};
 
-// Screen layout constants
-const ROWS: usize = 25;
-const COLS: usize = 80;
-const EDIT_ROWS: usize = ROWS - 2; // Row 0 = header, rows 1..23 = content, row 24 = status
-
-// Pre-baked color codes
+// Pre-baked color codes helper
 fn color(fg: Color, bg: Color) -> ColorCode { ColorCode::new(fg, bg) }
 
 struct Editor {
@@ -20,10 +15,17 @@ struct Editor {
     cur_col:  usize,              // cursor col in current line (0-based)
     scroll:   usize,              // first visible line index
     dirty:    bool,               // unsaved changes?
+    width:    usize,
+    height:   usize,
 }
 
 impl Editor {
     fn new(filename: &str) -> Self {
+        let (w, h) = {
+            let writer = WRITER.lock();
+            (writer.get_width(), writer.get_height())
+        };
+
         let content = crate::fs::read_file(filename)
             .unwrap_or_else(Vec::new);
 
@@ -33,11 +35,13 @@ impl Editor {
             if b == b'\n' {
                 lines.push(current.clone());
                 current.clear();
-            } else if b != b'\r' {
+            } else if b == b'\t' {
+                current.push(b);
+            } else if b >= 32 && b <= 126 {
                 current.push(b);
             }
         }
-        lines.push(current); // last line (may be empty)
+        lines.push(current);
         if lines.is_empty() { lines.push(Vec::new()); }
 
         Editor {
@@ -47,12 +51,15 @@ impl Editor {
             cur_col: 0,
             scroll:  0,
             dirty:   false,
+            width:   w,
+            height:  h,
         }
     }
 
     fn render(&self) {
         x86_64::instructions::interrupts::without_interrupts(|| {
             let mut w = WRITER.lock();
+            let edit_rows = self.height - 2;
 
             // --- Header bar (row 0) ---
             let hdr_color = color(Color::Black, Color::Cyan);
@@ -62,7 +69,7 @@ impl Editor {
                 if self.dirty { " [modified]" } else { "" },
                 "F2/Ctrl+S: Save   Esc: Quit"
             );
-            let hdr_padded = format_padded(&hdr, COLS);
+            let hdr_padded = format_padded(&hdr, self.width);
             w.write_str_at(0, 0, &hdr_padded, hdr_color);
 
             // --- Content rows ---
@@ -70,12 +77,12 @@ impl Editor {
             let cursor_color = color(Color::Black, Color::LightGray);
             let lineno  = color(Color::DarkGray,  Color::Black);
 
-            for screen_row in 0..EDIT_ROWS {
+            for screen_row in 0..edit_rows {
                 let file_row = self.scroll + screen_row;
                 let vga_row  = screen_row + 1; // offset for header
 
                 // Clear the row first
-                w.write_str_at(vga_row, 0, &" ".repeat(COLS), normal);
+                w.write_str_at(vga_row, 0, &" ".repeat(self.width), normal);
 
                 if file_row >= self.lines.len() { continue; }
 
@@ -83,9 +90,9 @@ impl Editor {
                 let lnum = alloc::format!("{:3} ", file_row + 1);
                 w.write_str_at(vga_row, 0, &lnum, lineno);
 
-                // Line content (clip to screen width minus line number width)
+                // Line content
                 let content_start_col = 4;
-                let max_chars = COLS - content_start_col;
+                let max_chars = self.width - content_start_col;
                 let line = &self.lines[file_row];
 
                 for (i, &b) in line.iter().enumerate().take(max_chars) {
@@ -97,12 +104,12 @@ impl Editor {
                 }
 
                 // Cursor at end of line
-                if file_row == self.cur_row && self.cur_col == line.len() {
+                if file_row == self.cur_row && self.cur_col == line.len() && self.cur_col < max_chars {
                     w.write_raw_at(vga_row, content_start_col + line.len(), b' ', cursor_color);
                 }
             }
 
-            // --- Status bar (row 24) ---
+            // --- Status bar ---
             let st_color = color(Color::White, Color::DarkGray);
             let status = alloc::format!(
                 " Ln {}/{}  Col {}  {} chars",
@@ -111,8 +118,8 @@ impl Editor {
                 self.cur_col + 1,
                 self.lines.iter().map(|l| l.len()).sum::<usize>() + self.lines.len().saturating_sub(1),
             );
-            let st_padded = format_padded(&status, COLS);
-            w.write_str_at(ROWS - 1, 0, &st_padded, st_color);
+            let st_padded = format_padded(&status, self.width);
+            w.write_str_at(self.height - 1, 0, &st_padded, st_color);
         });
     }
 
@@ -123,15 +130,20 @@ impl Editor {
             if i + 1 < self.lines.len() { bytes.push(b'\n'); }
         }
         let ok = crate::fs::write_file(&self.filename, &bytes);
-        if ok { self.dirty = false; }
+        if ok {
+            self.dirty = false;
+            // Note: In a real app we'd have a status() method, 
+            // for now let's just use the dirty flag logic
+        }
         ok
     }
 
     fn adjust_scroll(&mut self) {
+        let edit_rows = self.height - 2;
         if self.cur_row < self.scroll {
             self.scroll = self.cur_row;
-        } else if self.cur_row >= self.scroll + EDIT_ROWS {
-            self.scroll = self.cur_row - EDIT_ROWS + 1;
+        } else if self.cur_row >= self.scroll + edit_rows {
+            self.scroll = self.cur_row - edit_rows + 1;
         }
     }
 }
@@ -139,7 +151,7 @@ impl Editor {
 // ---- Public entry point ----
 
 pub fn open(filename: &str) {
-    // Validate extension — allow anything for text editing
+    // Validate extension - allow anything for text editing
     let mut state = Editor::new(filename);
     state.render();
 
@@ -241,16 +253,21 @@ fn save_file(state: &mut Editor) {
     if state.save() {
         // Show save confirmation briefly in status bar
         let ok_color = ColorCode::new(Color::Black, Color::Green);
+        let filename = state.filename.clone();
+        let width = state.width;
+        let height = state.height;
         x86_64::instructions::interrupts::without_interrupts(|| {
-            let msg = format_padded(&alloc::format!(" Saved: {}", state.filename), COLS);
-            WRITER.lock().write_str_at(ROWS - 1, 0, &msg, ok_color);
+            let msg = format_padded(&alloc::format!(" Saved: {}", filename), width);
+            WRITER.lock().write_str_at(height - 1, 0, &msg, ok_color);
         });
         for _ in 0..5_000_000 { core::hint::spin_loop(); }
     } else {
         let err_color = ColorCode::new(Color::White, Color::Red);
+        let width = state.width;
+        let height = state.height;
         x86_64::instructions::interrupts::without_interrupts(|| {
-            let msg = format_padded(" ERROR: Could not save file!", COLS);
-            WRITER.lock().write_str_at(ROWS - 1, 0, &msg, err_color);
+            let msg = format_padded(" ERROR: Could not save file!", width);
+            WRITER.lock().write_str_at(height - 1, 0, &msg, err_color);
         });
         for _ in 0..5_000_000 { core::hint::spin_loop(); }
     }

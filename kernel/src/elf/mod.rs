@@ -1,4 +1,4 @@
-/// ELF64 binary loader — parses standard ELF executables and loads them into memory.
+/// ELF64 binary loader - parses standard ELF executables and loads them into memory.
 /// Supports: ET_EXEC (static executable), PT_LOAD segments, x86_64 only.
 /// Does NOT support: dynamic linking (DT_INTERP), relocations, or 32-bit ELF.
 
@@ -77,13 +77,25 @@ pub fn load(bytes: &[u8]) -> Result<u64, ElfError> {
     let hdr = unsafe { &*(bytes.as_ptr() as *const Elf64Header) };
 
     // Validate magic
-    if hdr.e_ident[..4] != ELF_MAGIC { return Err(ElfError::BadMagic); }
-    if hdr.e_ident[4] != ELFCLASS64  { return Err(ElfError::Not64Bit); }
-    if hdr.e_ident[5] != ELFDATA2LSB { return Err(ElfError::NotLittleEndian); }
-    if hdr.e_machine != EM_X86_64    { return Err(ElfError::NotX86_64); }
+    if hdr.e_ident[..4] != ELF_MAGIC { 
+        crate::serial_println!("ELF: Bad Magic: {:x?}", &hdr.e_ident[..4]);
+        return Err(ElfError::BadMagic); 
+    }
+    if hdr.e_ident[4] != ELFCLASS64  { 
+        crate::serial_println!("ELF: Not 64-bit: {}", hdr.e_ident[4]);
+        return Err(ElfError::Not64Bit); 
+    }
+    if hdr.e_ident[5] != ELFDATA2LSB { 
+        crate::serial_println!("ELF: Not Little Endian: {}", hdr.e_ident[5]);
+        return Err(ElfError::NotLittleEndian); 
+    }
+    if hdr.e_machine != EM_X86_64    { 
+        crate::serial_println!("ELF: Not X86_64: {}", hdr.e_machine);
+        return Err(ElfError::NotX86_64); 
+    }
 
     // Reject dynamic executables (require an interpreter / dynamic linker)
-    // Type 3 = ET_DYN, but PIE executables also use ET_DYN — we accept both
+    // Type 3 = ET_DYN, but PIE executables also use ET_DYN - we accept both
     // as long as there is no PT_INTERP segment (checked below)
 
     let ph_offset  = hdr.e_phoff as usize;
@@ -101,6 +113,7 @@ pub fn load(bytes: &[u8]) -> Result<u64, ElfError> {
     for i in 0..ph_count {
         let ph = ph_at(bytes, ph_offset, ph_entsize, i);
         if ph.p_type == 3 { // PT_INTERP
+            crate::serial_println!("ELF: Dynamic (PT_INTERP) not supported");
             return Err(ElfError::DynamicNotSupported);
         }
     }

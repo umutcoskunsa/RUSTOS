@@ -78,14 +78,20 @@ impl AtaDriver {
 
     /// Read `count` sectors starting at `lba` into `buffer`.
     /// Buffer must have at least `count * 512` bytes.
-    pub fn read_sectors(&mut self, lba: u32, count: u8, buffer: &mut [u8]) -> Result<(), &'static str> {
+    /// drive: 0 for Master (0xE0), 1 for Slave (0xF0)
+    pub fn read_sectors(&mut self, drive: u8, lba: u32, count: u8, buffer: &mut [u8]) -> Result<(), &'static str> {
         assert!(buffer.len() >= count as usize * 512, "Buffer too small");
         
-        self.wait_ready();
-
         unsafe {
-            // Select master drive (0xE0) with LBA addressing + top 4 bits of LBA
-            self.drive_head.write(0xE0 | ((lba >> 24) as u8 & 0x0F));
+            let drive_select = if drive == 0 { 0xE0 } else { 0xF0 };
+            self.drive_head.write(drive_select | ((lba >> 24) as u8 & 0x0F));
+            
+            // Mandatory 400ns delay after drive selection (read status 4 times)
+            for _ in 0..4 { let _ = self.status.read(); }
+
+            // Now wait for the selected drive to be ready
+            self.wait_ready();
+
             self.sector_cnt.write(count);
             self.lba_lo.write(lba as u8);
             self.lba_mid.write((lba >> 8) as u8);
@@ -111,13 +117,19 @@ impl AtaDriver {
     }
 
     /// Write `count` sectors starting at `lba` from `buffer`.
-    pub fn write_sectors(&mut self, lba: u32, count: u8, buffer: &[u8]) -> Result<(), &'static str> {
+    pub fn write_sectors(&mut self, drive: u8, lba: u32, count: u8, buffer: &[u8]) -> Result<(), &'static str> {
         assert!(buffer.len() >= count as usize * 512, "Buffer too small");
 
-        self.wait_ready();
-
         unsafe {
-            self.drive_head.write(0xE0 | ((lba >> 24) as u8 & 0x0F));
+            let drive_select = if drive == 0 { 0xE0 } else { 0xF0 };
+            self.drive_head.write(drive_select | ((lba >> 24) as u8 & 0x0F));
+            
+            // Mandatory 400ns delay after drive selection
+            for _ in 0..4 { let _ = self.status.read(); }
+            
+            // Now wait for the selected drive to be ready
+            self.wait_ready();
+
             self.sector_cnt.write(count);
             self.lba_lo.write(lba as u8);
             self.lba_mid.write((lba >> 8) as u8);
@@ -135,6 +147,7 @@ impl AtaDriver {
                 let word = (buffer[byte_offset] as u16) | ((buffer[byte_offset + 1] as u16) << 8);
                 unsafe { self.data.write(word); }
             }
+            self.wait_ready();
         }
 
         Ok(())

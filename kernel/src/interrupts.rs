@@ -21,6 +21,7 @@ pub static TICK_COUNT: core::sync::atomic::AtomicU64 = core::sync::atomic::Atomi
 pub enum InterruptIndex {
     Timer = PIC_1_OFFSET,
     Keyboard,
+    Network = PIC_1_OFFSET + 11, // IRQ 11 mapped to Vector 43
 }
 
 impl InterruptIndex {
@@ -40,9 +41,12 @@ lazy_static! {
         unsafe {
             idt.double_fault.set_handler_fn(double_fault_handler)
                 .set_stack_index(crate::gdt::DOUBLE_FAULT_IST_INDEX);
+            idt.page_fault.set_handler_fn(page_fault_handler)
+                .set_stack_index(crate::gdt::PAGE_FAULT_IST_INDEX);
+            idt.general_protection_fault.set_handler_fn(general_protection_fault_handler)
+                .set_stack_index(crate::gdt::GPF_IST_INDEX);
+            idt.invalid_opcode.set_handler_fn(invalid_opcode_handler);
         }
-        idt.page_fault.set_handler_fn(page_fault_handler);
-        idt.general_protection_fault.set_handler_fn(general_protection_fault_handler);
 
         unsafe {
             idt[InterruptIndex::Timer.as_usize()].set_handler_addr(
@@ -50,6 +54,7 @@ lazy_static! {
             );
         }
         idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
+        idt[InterruptIndex::Network.as_usize()].set_handler_fn(network_interrupt_handler);
         
         idt
     };
@@ -79,6 +84,13 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     crate::apic::end_of_interrupt();
 }
 
+extern "x86-interrupt" fn network_interrupt_handler(
+    _stack_frame: InterruptStackFrame)
+{
+    crate::net::rtl8139::handle_interrupt();
+    crate::apic::end_of_interrupt();
+}
+
 extern "x86-interrupt" fn unhandled_interrupt_handler(
     stack_frame: InterruptStackFrame)
 {
@@ -99,12 +111,35 @@ extern "x86-interrupt" fn double_fault_handler(
 }
 
 extern "x86-interrupt" fn general_protection_fault_handler(
-    stack_frame: InterruptStackFrame, error_code: u64)
-{
-    panic!("EXCEPTION: GENERAL PROTECTION FAULT\nError Code: {}\n{:#?}", error_code, stack_frame);
+    stack_frame: InterruptStackFrame,
+    error_code: u64,
+) {
+    use crate::serial_println;
+    serial_println!("EXCEPTION: GENERAL PROTECTION FAULT");
+    serial_println!("Error Code: {}", error_code);
+    serial_println!("RIP: {:?}", stack_frame.instruction_pointer);
+    serial_println!("CS:  {:#x}", stack_frame.code_segment);
+    serial_println!("RFLAGS: {:#x}", stack_frame.cpu_flags);
+    serial_println!("RSP: {:?}", stack_frame.stack_pointer);
+    serial_println!("SS:  {:#x}", stack_frame.stack_segment);
+    
+    unsafe extern "C" {
+        static context_switch_iretq: u8;
+    }
+    let iretq_addr = unsafe { &context_switch_iretq as *const _ as u64 };
+    serial_println!("IRETQ Address: {:#x}", iretq_addr);
+    
+    panic!("GENERAL PROTECTION FAULT");
 }
 
 use x86_64::structures::idt::PageFaultErrorCode;
+
+extern "x86-interrupt" fn invalid_opcode_handler(
+    stack_frame: InterruptStackFrame)
+{
+    panic!("EXCEPTION: INVALID OPCODE at {:?}\n{:#?}", 
+        stack_frame.instruction_pointer, stack_frame);
+}
 
 extern "x86-interrupt" fn page_fault_handler(
     stack_frame: InterruptStackFrame,

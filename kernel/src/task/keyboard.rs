@@ -19,7 +19,20 @@ pub(crate) fn add_scancode(scancode: u8) {
             WAKER.wake();
         }
     } else {
-        crate::println!("WARNING: scancode queue uninitialized");
+        // Initialize if not done
+        let _ = SCANCODE_QUEUE.try_init_once(|| ArrayQueue::new(100));
+        // Push the first scancode after initialization!
+        if let Ok(queue) = SCANCODE_QUEUE.try_get() {
+            let _ = queue.push(scancode);
+        }
+    }
+}
+
+pub fn pop_scancode() -> Option<u8> {
+    if let Ok(queue) = SCANCODE_QUEUE.try_get() {
+        queue.pop()
+    } else {
+        None
     }
 }
 

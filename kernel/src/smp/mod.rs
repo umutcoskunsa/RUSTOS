@@ -2,6 +2,7 @@ use core::sync::atomic::{AtomicUsize, Ordering};
 
 /// Number of Application Processors that have come online
 pub static AP_COUNT: AtomicUsize = AtomicUsize::new(0);
+pub static AP_READY_FLAG: core::sync::atomic::AtomicBool = core::sync::atomic::AtomicBool::new(false);
 
 // Raw bytes of the AP trampoline assembly blob
 // We'll read the trampoline from the linker-provided symbols
@@ -14,7 +15,7 @@ unsafe extern "C" {
 
 /// Rust entry point for all Application Processors.
 /// Called from the 64-bit portion of the SMP trampoline.
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub extern "C" fn ap_entry() -> ! {
     let ap_id = AP_COUNT.fetch_add(1, Ordering::SeqCst) + 1;
     crate::serial_println!("SMP: Application Processor {} is ONLINE!", ap_id);
@@ -24,6 +25,12 @@ pub extern "C" fn ap_entry() -> ! {
 
     // Load the shared IDT (interrupts are needed for scheduling)
     crate::interrupts::init_idt();
+
+    // Initialize SYSCALL/SYSRET for this core
+    crate::syscall::init();
+
+    // Signal BSP that this core is ready
+    AP_READY_FLAG.store(true, Ordering::SeqCst);
 
     // Enable Local APIC timer on this AP
     crate::apic::end_of_interrupt(); // Clear any pending interrupt
@@ -40,6 +47,7 @@ const TRAMPOLINE_PHYS_ADDR: usize = 0x8000;
 const TRAMPOLINE_CR3_PTR:    usize = 0x7FF8;
 const TRAMPOLINE_IDT_PTR:    usize = 0x7FE8;
 const TRAMPOLINE_ENTRY_PTR:  usize = 0x7FD8;
+const TRAMPOLINE_STACK_PTR:  usize = 0x7FC8;
 
 /// Wake all Application Processors by sending INIT + SIPI via LAPIC ICR.
 pub fn start_all_aps() {
@@ -91,7 +99,24 @@ pub fn start_all_aps() {
     crate::serial_println!("SMP: Detected {} CPU(s) total.", ap_count);
 
     for ap_lapic_id in 1..ap_count {
+        AP_READY_FLAG.store(false, Ordering::SeqCst);
+        
+        // Allocate a fresh 64KB kernel stack for this AP
+        let stack = alloc::vec![0u8; 64 * 1024].into_boxed_slice();
+        let stack_ptr = stack.as_ptr() as u64 + stack.len() as u64;
+        core::mem::forget(stack); // Keep the stack alive forever
+        
+        // Write the stack pointer to the trampoline area
+        unsafe {
+            let ptr = TRAMPOLINE_STACK_PTR as *mut u64;
+            ptr.write_volatile(stack_ptr);
+        }
+
         wake_ap(lapic_base, ap_lapic_id as u8);
+        // Wait for AP to finish gdt::init()
+        while !AP_READY_FLAG.load(Ordering::SeqCst) {
+            core::hint::spin_loop();
+        }
     }
 
     crate::serial_println!("SMP: INIT/SIPI sent to {} APs.", ap_count.saturating_sub(1));

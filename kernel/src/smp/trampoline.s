@@ -68,8 +68,8 @@ ap_long_mode_entry:
     movw %ax, %es
     movw %ax, %ss
 
-    // Set up a temporary stack for this AP (below trampoline code)
-    movq $0x7000, %rsp
+    // Load unique stack pointer for this AP (written by BSP at 0x7FC8)
+    movq 0x7FC8, %rsp
 
     // Load the shared IDT written by BSP at 0x7FE8
     lidtq 0x7FE8

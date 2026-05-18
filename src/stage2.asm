@@ -183,6 +183,22 @@ start:
     call puts
 
     ; -------------------------------------------------------------------------
+    ; VESA VBE: Set graphics mode 1024x768x32 (Mode 0x118 or search)
+    ; We store framebuffer info at 0x7E00 for the kernel to find
+    ; -------------------------------------------------------------------------
+    mov ax, 0x4F01          ; VBE Get Mode Info
+    mov cx, 0x0118          ; Mode 0x118 = 1024x768x32bpp (linear)
+    mov di, 0x7E00          ; Store ModeInfo block at 0x7E00
+    int 0x10
+    cmp ax, 0x004F
+    jne .vbe_skip           ; if BIOS doesn't support it, skip
+
+    mov ax, 0x4F02          ; VBE Set Mode
+    mov bx, 0x4118          ; Mode 0x118 | 0x4000 (linear framebuffer bit)
+    int 0x10
+
+.vbe_skip:
+    ; -------------------------------------------------------------------------
     ; Switch to 32-bit Protected Mode
     ; -------------------------------------------------------------------------
     cli

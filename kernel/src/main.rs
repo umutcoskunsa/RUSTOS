@@ -2,6 +2,7 @@
 #![no_main]
 #![feature(abi_x86_interrupt)]
 #![feature(alloc_error_handler)]
+#![feature(naked_functions)]
 
 pub mod vga_buffer;
 pub mod serial;
@@ -20,6 +21,10 @@ pub mod shell;
 pub mod cap;
 pub mod elf;
 pub mod process;
+pub mod ipc;
+pub mod pci;
+pub mod net;
+pub mod graphics;
 extern crate alloc;
 
 use core::panic::PanicInfo;
@@ -37,8 +42,8 @@ unsafe extern "C" {
 }
 
 /// Kernel entry point
-#[unsafe(no_mangle)]
-#[unsafe(link_section = ".text.start")]
+#[no_mangle]
+#[link_section = ".text.start"]
 pub extern "C" fn kernel_main(mmap_ptr: u64, mmap_cnt: u64) -> ! {
     // Zero out .bss section early to ensure global statics (such as VGA and Serial locks) start cleared
     unsafe {
@@ -88,7 +93,7 @@ pub extern "C" fn kernel_main(mmap_ptr: u64, mmap_cnt: u64) -> ! {
     };
 
     let heap_start: u64 = 0x4444_4444_0000;
-    let heap_size: u64 = 2 * 1024 * 1024; // 2MB
+    let heap_size: u64 = 64 * 1024 * 1024; // 64MB - large enough for WAD file reads
     let heap_end = heap_start + heap_size;
 
     serial_println!("Mapping Heap pages...");
@@ -146,14 +151,41 @@ pub extern "C" fn kernel_main(mmap_ptr: u64, mmap_cnt: u64) -> ! {
     smp::start_all_aps();
 
     // Detect and initialize the ATA disk
-    if disk::detect() {
+    if disk::detect(0) {
         crate::serial_println!("DISK: ATA Master disk detected.");
+        // Initialize the VFS and mount the root filesystem
+        crate::fs::init();
     } else {
         crate::serial_println!("DISK: No ATA disk found (no -hda?)");
     }
 
+    // Initialize Graphics Engine (reads VBE info left by bootloader)
+    crate::graphics::init();
+    if crate::graphics::is_active() {
+        let w = crate::graphics::width();
+        let h = crate::graphics::height();
+        crate::vga_buffer::WRITER.lock().init_graphics(w, h);
+    }
+
+    crate::pci::scan_bus();
+    crate::net::init();
+
     // Initialize SYSCALL/SYSRET mechanism
     syscall::init();
+
+    // Enable SSE and FPU support
+    unsafe {
+        use x86_64::registers::control::{Cr0, Cr0Flags, Cr4, Cr4Flags};
+        let mut cr0 = Cr0::read();
+        cr0.remove(Cr0Flags::EMULATE_COPROCESSOR);
+        cr0.insert(Cr0Flags::MONITOR_COPROCESSOR);
+        Cr0::write(cr0);
+
+        let mut cr4 = Cr4::read();
+        cr4.insert(Cr4Flags::OSFXSR);
+        cr4.insert(Cr4Flags::OSXMMEXCPT_ENABLE);
+        Cr4::write(cr4);
+    }
 
     println!("It did not crash! Resumed execution!");
     println!("Starting Shell...");

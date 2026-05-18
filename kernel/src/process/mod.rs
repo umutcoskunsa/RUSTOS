@@ -16,21 +16,24 @@ static NEXT_PID: AtomicUsize = AtomicUsize::new(1);
 // We no longer use a global CURRENT_PID. It is now stored in PerCpu (gdt.rs).
 
 /// Size of the per-process user stack
-const USER_STACK_SIZE: usize = 64 * 1024; // 64 KiB
+const USER_STACK_SIZE: usize = 1024 * 1024; // 1 MiB
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProcessState {
     Ready,
     Running,
+    Blocked,
     Zombie(i64),
 }
 
-#[repr(C, packed)]
+#[repr(C)]
 pub struct InterruptFrame {
     pub r15: u64, pub r14: u64, pub r13: u64, pub r12: u64,
     pub r11: u64, pub r10: u64, pub r9:  u64, pub r8:  u64,
     pub rbp: u64, pub rdi: u64, pub rsi: u64, pub rdx: u64,
     pub rcx: u64, pub rbx: u64, pub rax: u64,
+    pub sentinel: u64,
+    pub error_code: u64,
     pub rip: u64, pub cs:  u64, pub rflags: u64, pub rsp:  u64, pub ss:  u64,
 }
 
@@ -41,6 +44,8 @@ pub struct Process {
     pub cr3:          u64,                     // Physical address of this process's PML4
     pub kernel_stack: alloc::boxed::Box<[u8]>, // Ring 0 stack allocation
     pub kernel_rsp:   u64,                     // RSP referencing the InterruptFrame
+    pub fd_table:     alloc::vec::Vec<Option<crate::ipc::FileDescriptor>>,
+    pub heap_end:     u64,                     // Current program break (for sbrk)
 }
 
 // We no longer use a global KERNEL_THREAD_RSP. It is now stored in PerCpu (gdt.rs).
@@ -102,9 +107,10 @@ pub fn spawn(elf_bytes: &[u8], name: &str) -> Result<usize, &'static str> {
         }
         let entry_point = match crate::elf::load(elf_bytes) {
             Ok(ep) => ep,
-            Err(_) => {
+            Err(e) => {
                 unsafe { write_cr3(current_cr3); }
-                return Err("ELF load failed");
+                crate::serial_println!("PROCESS: ELF load failed: {:?}", e);
+                return Err("ELF load failed (check serial for details)");
             }
         };
 
@@ -114,20 +120,26 @@ pub fn spawn(elf_bytes: &[u8], name: &str) -> Result<usize, &'static str> {
             unsafe { write_cr3(current_cr3); }
             return Err(e);
         }
-        let stack_top = crate::userspace::USER_STACK_VIRT - 8; // 16-byte aligned
+        let stack_top = crate::userspace::USER_STACK_VIRT; // 16-byte aligned
 
         // 6. Restore the kernel's original CR3
         unsafe { write_cr3(current_cr3); }
 
         // 7. Craft the initial interrupt stack frame manually on the kernel stack
-        let mut kernel_stack = alloc::vec![0u8; 64 * 1024].into_boxed_slice();
-        let kernel_stack_end = kernel_stack.as_ptr() as u64 + kernel_stack.len() as u64;
+        let kernel_stack = alloc::vec![0u8; 64 * 1024].into_boxed_slice();
+        let kernel_stack_end = (kernel_stack.as_ptr() as u64 + kernel_stack.len() as u64) & !0xFu64;
         
         let frame_ptr = (kernel_stack_end - core::mem::size_of::<InterruptFrame>() as u64) as *mut InterruptFrame;
         unsafe {
+            // Write a "Canary" at the very bottom of the stack
+            let canary_ptr = kernel_stack.as_ptr() as *mut u64;
+            canary_ptr.write_volatile(0xDEADBEEF_CAFEBABE);
+
             core::ptr::write(frame_ptr, InterruptFrame {
                 rax: 0, rbx: 0, rcx: 0, rdx: 0, rsi: 0, rdi: 0, rbp: 0,
                 r8: 0, r9: 0, r10: 0, r11: 0, r12: 0, r13: 0, r14: 0, r15: 0,
+                sentinel: 0x12345678,
+                error_code: 0,
                 rip: entry_point,
                 cs:  gdt::get_user_code_selector().0 as u64,     // Ring 3 Code
                 rflags: 0x202,     // Interrupts Enabled
@@ -139,6 +151,12 @@ pub fn spawn(elf_bytes: &[u8], name: &str) -> Result<usize, &'static str> {
         let kernel_rsp = frame_ptr as u64;
 
         let pid = NEXT_PID.fetch_add(1, Ordering::SeqCst);
+        
+        let mut fd_table = alloc::vec::Vec::new();
+        fd_table.push(Some(crate::ipc::FileDescriptor::StandardInput));
+        fd_table.push(Some(crate::ipc::FileDescriptor::StandardOutput));
+        fd_table.push(Some(crate::ipc::FileDescriptor::StandardError));
+
         let proc = Process {
             pid,
             name: alloc::string::String::from(name),
@@ -146,6 +164,10 @@ pub fn spawn(elf_bytes: &[u8], name: &str) -> Result<usize, &'static str> {
             cr3: new_pml4_phys,
             kernel_stack,
             kernel_rsp,
+            fd_table,
+            // Heap starts at 0x0000_0040_0000_0000 - well above user ELF (0x80_0000_0000)
+            // and well below the stack. 1 GiB of address space for the heap.
+            heap_end: 0x0000_0010_0000_0000,
         };
 
         PROCESS_TABLE.lock().push(proc);
@@ -157,7 +179,7 @@ pub fn spawn(elf_bytes: &[u8], name: &str) -> Result<usize, &'static str> {
     })
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub extern "C" fn process_schedule(old_rsp: u64) -> u64 {
     // 1. Tick and acknowledge hardware timer
     crate::interrupts::TICK_COUNT.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
@@ -165,22 +187,37 @@ pub extern "C" fn process_schedule(old_rsp: u64) -> u64 {
 
     let mut table = PROCESS_TABLE.lock();
     let per_cpu = crate::gdt::get_per_cpu();
+    
+    // Safety Guard: If the core hasn't finished GDT/TSS init, do not attempt to schedule.
+    // This prevents the AP from crashing if the timer fires before gdt::init completes.
+    if per_cpu.tss_ptr == 0 {
+        return old_rsp;
+    }
+
     let current_pid = per_cpu.current_pid;
 
     // 2. Save current RSP
-    if current_pid == 0 {
-        // Interrupted the OS Shell thread; stash its stack pointer!
-        per_cpu.shell_rsp = old_rsp;
-    } else {
+    if current_pid != 0 {
         if let Some(p) = table.iter_mut().find(|x| x.pid == current_pid) {
+            // Check for stack overflow (at the bottom)
+            let canary = unsafe { (p.kernel_stack.as_ptr() as *const u64).read_volatile() };
+            if canary != 0xDEADBEEF_CAFEBABE {
+                crate::serial_println!("PANIC [CPU {}]: Stack overflow detected on PID {}! Canary={:#x}", 
+                    crate::apic::local_id(), p.pid, canary);
+            }
+
             p.kernel_rsp = old_rsp; // Save the exact interruption frame pointer
             if p.state == ProcessState::Running {
                 p.state = ProcessState::Ready;
             }
         }
+    } else {
+        // Interrupted the OS Shell thread; stash its stack pointer!
+        per_cpu.shell_rsp = old_rsp;
     }
 
     // 3. Find next available Ready process via Round-Robin
+    // We filter for Ready processes only to ensure a Running process isn't "stolen" by another core
     let next_proc = table.iter_mut().find(|x| x.state == ProcessState::Ready);
     
     match next_proc {
@@ -191,11 +228,21 @@ pub extern "C" fn process_schedule(old_rsp: u64) -> u64 {
             // Re-arm state: Update the TSS so future hardware interrupts use THIS kernel stack
             let kstack_top = p.kernel_stack.as_ptr() as u64 + p.kernel_stack.len() as u64;
             crate::gdt::set_tss_rsp0(kstack_top);
-            // Also update PerCpu.kernel_stack for syscall stack switching
+            
+            // Validate the frame we're about to load
+            let frame = unsafe { &*(p.kernel_rsp as *const InterruptFrame) };
+            if frame.ss == 0 {
+                crate::serial_println!("PANIC [CPU {}]: Invalid Stack Frame! SS is zero. RIP={:#x}", 
+                    crate::apic::local_id(), frame.rip);
+            }
+            
             per_cpu.kernel_stack = kstack_top;
             
             // Switch Virtual Memory Address Spaces safely!
             unsafe { write_cr3(p.cr3); }
+            
+            // crate::serial_println!("SCHED [CPU {}]: switching to PID {} ({}). RSP={:#x}", 
+            //    crate::apic::local_id(), p.pid, p.name, p.kernel_rsp);
             p.kernel_rsp // Hand physical CPU execution to this process's context!
         },
         None => {
@@ -209,6 +256,8 @@ pub extern "C" fn process_schedule(old_rsp: u64) -> u64 {
 
             // Otherwise, we exited from processes and are jumping back to Shell.
             unsafe { write_cr3(0x70000); } // Identity Map
+            // crate::serial_println!("SCHED [CPU {}]: returning to Shell. RSP={:#x}", 
+            //     crate::apic::local_id(), shell_rsp);
             shell_rsp 
         }
     }
@@ -292,11 +341,63 @@ fn map_elf_segments(elf_bytes: &[u8]) -> Result<(), &'static str> {
         let page_end   = (vaddr + memsz as u64 + 0xFFF) & !0xFFF;
         let num_pages  = ((page_end - page_start) / 4096) as usize;
 
+        crate::serial_println!("PROCESS: Mapping ELF segment {}: {:#x}..{:#x} ({} pages)", 
+            i, page_start, page_end, num_pages);
+
         map_user_accessible(page_start, num_pages * 4096)?;
     }
     Ok(())
 }
 
+/// Map a single user-accessible page at virtual address `virt` inside the
+/// page table identified by `cr3`.  Allocates a fresh physical frame,
+/// temporarily switches to the target CR3, maps the page, then restores
+/// the original CR3.  Used by sys_sbrk / sys_mmap.
+pub fn map_user_page_in(cr3: u64, virt: u64) {
+    use x86_64::{
+        VirtAddr,
+        structures::paging::{Mapper, Page, PageTableFlags, Size4KiB, FrameAllocator},
+    };
+
+    let flags = PageTableFlags::PRESENT
+        | PageTableFlags::WRITABLE
+        | PageTableFlags::USER_ACCESSIBLE;
+
+    let frame = {
+        let mut fa = crate::memory::GLOBAL_FRAME_ALLOCATOR.lock();
+        fa.as_mut().unwrap().allocate_frame().expect("OOM in map_user_page_in")
+    };
+
+    // Identity-map the new frame so we can zero it
+    crate::memory::map_identity_region(
+        frame.start_address().as_u64(),
+        frame.start_address().as_u64() + 4096,
+    );
+
+    // Zero the page so the process gets clean memory (no data leaks)
+    unsafe {
+        let ptr = frame.start_address().as_u64() as *mut u8;
+        core::ptr::write_bytes(ptr, 0, 4096);
+    }
+
+    // Switch to the target process page table and map the virtual address
+    let old_cr3 = read_cr3();
+    unsafe { write_cr3(cr3); }
+
+    let mut mapper_guard = crate::memory::GLOBAL_MAPPER.lock();
+    let mut fa_guard     = crate::memory::GLOBAL_FRAME_ALLOCATOR.lock();
+    let mapper = mapper_guard.as_mut().unwrap();
+    let fa     = fa_guard.as_mut().unwrap();
+
+    let page: Page<Size4KiB> = Page::containing_address(VirtAddr::new(virt));
+    unsafe {
+        let _ = mapper.map_to(page, frame, flags, fa);
+    }
+    drop(mapper_guard);
+    drop(fa_guard);
+
+    unsafe { write_cr3(old_cr3); }
+}
 /// Re-map a kernel-heap virtual range to add the USER_ACCESSIBLE flag.
 /// This is needed so Ring 3 code can execute/read/write the pages.
 fn map_user_accessible(virt_start: u64, size: usize) -> Result<(), &'static str> {
@@ -323,14 +424,14 @@ fn map_user_accessible(virt_start: u64, size: usize) -> Result<(), &'static str>
         let page: Page<Size4KiB> = Page::containing_address(virt);
 
         if let Ok(_phys) = mapper.translate_page(page) {
-            // Page is already mapped (e.g. kernel identity map) —
+            // Page is already mapped (e.g. kernel identity map) -
             // just update the flags in-place, no unmap needed
             unsafe {
                 mapper.update_flags(page, flags)
                     .map_err(|_| "update_flags failed")?.flush();
             }
         } else {
-            // Not mapped — allocate a fresh physical frame and map it
+            // Not mapped - allocate a fresh physical frame and map it
             let frame = fa.allocate_frame().ok_or("Out of physical frames")?;
             unsafe {
                 mapper.map_to(page, frame, flags, fa)

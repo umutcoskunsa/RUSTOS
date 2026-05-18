@@ -1,0 +1,721 @@
+﻿mkdir -p build
+cd kernel && PATH="$HOME/.cargo/bin:$PATH" RUSTFLAGS="-C target-feature=-redzone -C link-arg=-Tlinker.ld -C relocation-model=static" cargo build --target x86_64-unknown-none --release
+wsl : '-redzone' is not a recognized feature for this target (ignoring feature)
+At line:1 char:1
++ wsl make 2>&1 | Out-File -FilePath build_output_utf8.txt -Encoding ut ...
++ ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ('-redzone' is n...noring feature):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''-redzone-redzone' is not a recognized feature for this target' is not a recognized feature for this target (ignoring 
+feature)
+ (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone'' is not a recognized feature for this target-redzone (ignoring feature)
+' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''-redzone' is not a recognized feature for this target-redzone (ignoring feature)
+' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''-redzone-redzone' is not a recognized feature for this target' is not a recognized feature for this target (ignoring 
+feature)
+ (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''''-redzone'-redzone-redzone-redzone' is not a recognized feature for this target' is not a recognized feature for 
+this target' is not a recognized feature for this target (ignoring feature)
+ (ignoring feature)
+ (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+-redzone' is not a recognized feature for this target' is not a recognized feature for this target (ignoring feature)
+ (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''-redzone-redzone' is not a recognized feature for this target' is not a recognized feature for this target (ignoring 
+feature)
+ (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+'-redzone' is not a recognized feature for this target (ignoring feature)
+''-redzone-redzone' is not a recognized feature for this target (ignoring feature)
+' is not a recognized feature for this target (ignoring feature)
+   Compiling kernel v0.1.0 (/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel)
+warning: unknown and unstable feature specified for `-Ctarget-feature`: `redzone`
+  |
+  = note: it is still passed through to the codegen backend, but use of this feature might be unsound and the behavior 
+of this feature can change in the future
+  = help: consider filing a feature request
+
+warning: avoid using `.intel_syntax`, Intel syntax is the default
+  --> src/interrupts.rs:69:25
+   |
+69 | ...m!(include_str!("context_switch.s"));
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(bad_asm_style)]` on by default
+
+
+thread 'rustc' (51343) panicked at 
+/rustc-dev/3645249d79dfb136b5d8de3ce153d19d6698d92d/library/core/src/slice/index.rs:1031:55:
+slice index starts at 9 but ends at 8
+stack backtrace:
+   0:     0x7592fa926e3b - <<std[8df389e468092df2]::sys::backtrace::BacktraceLock>::print::DisplayBacktrace as 
+core[8d30425dc6831f26]::fmt::Display>::fmt
+   1:     0x7592fb01d588 - core[8d30425dc6831f26]::fmt::write
+   2:     0x7592fa93de46 - <std[8df389e468092df2]::sys::stdio::unix::Stderr as 
+std[8df389e468092df2]::io::Write>::write_fmt
+   3:     0x7592fa8fcf28 - std[8df389e468092df2]::panicking::default_hook::{closure#0}
+   4:     0x7592fa91a2b3 - std[8df389e468092df2]::panicking::default_hook
+   5:     0x7592f9916afc - std[8df389e468092df2]::panicking::update_hook::<alloc[6266310efb1e37fc]::boxed::Box<rustc_dr
+iver_impl[452c8c91aaa6866a]::install_ice_hook::{closure#1}>>::{closure#0}
+   6:     0x7592fa91a592 - std[8df389e468092df2]::panicking::panic_with_hook
+   7:     0x7592fa8fcfe8 - std[8df389e468092df2]::panicking::panic_handler::{closure#0}
+   8:     0x7592fa8f3d19 - std[8df389e468092df2]::sys::backtrace::__rust_end_short_backtrace::<std[8df389e468092df2]::p
+anicking::panic_handler::{closure#0}, !>
+   9:     0x7592fa8fea4d - __rustc[96991768433d27a8]::rust_begin_unwind
+  10:     0x7592f74e305c - core[8d30425dc6831f26]::panicking::panic_fmt
+  11:     0x7592f86ed1cd - core[8d30425dc6831f26]::slice::index::slice_index_fail
+  12:     0x7592f9230925 - <annotate_snippets[7c6823572b2403ac]::renderer::styled_buffer::StyledBuffer>::replace
+  13:     0x7592fc3023c2 - annotate_snippets[7c6823572b2403ac]::renderer::render::render
+  14:     0x7592fc5268a1 - 
+<rustc_errors[534b5ff305277a4b]::annotate_snippet_emitter_writer::AnnotateSnippetEmitter>::emit_messages_default
+  15:     0x7592fc51f21b - <rustc_errors[534b5ff305277a4b]::annotate_snippet_emitter_writer::AnnotateSnippetEmitter as 
+rustc_errors[534b5ff305277a4b]::emitter::Emitter>::emit_diagnostic
+  16:     0x7592fc51e4bc - <rustc_errors[534b5ff305277a4b]::json::Diagnostic>::from_errors_diagnostic
+  17:     0x7592fc51dc21 - <rustc_errors[534b5ff305277a4b]::json::JsonEmitter as 
+rustc_errors[534b5ff305277a4b]::emitter::Emitter>::emit_diagnostic
+  18:     0x7592fc51c96c - <rustc_errors[534b5ff305277a4b]::DiagCtxtInner>::emit_diagnostic::{closure#3}
+  19:     0x7592fc51b1de - rustc_interface[983d4ab689a8af78]::callbacks::track_diagnostic::<core[8d30425dc6831f26]::opt
+ion::Option<rustc_span[d343c51ad9008c07]::ErrorGuaranteed>>
+  20:     0x7592fc519e31 - <rustc_errors[534b5ff305277a4b]::DiagCtxtInner>::emit_diagnostic
+  21:     0x7592fc519cdf - <rustc_errors[534b5ff305277a4b]::DiagCtxtHandle>::emit_diagnostic
+  22:     0x7592fc519b9d - <() as 
+rustc_errors[534b5ff305277a4b]::diagnostic::EmissionGuarantee>::emit_producing_guarantee
+  23:     0x7592fb425e11 - rustc_middle[c35a94ff89e6a300]::lint::emit_lint_base::emit_lint_base_impl
+  24:     0x7592fb425703 - <rustc_lint[b367858a0e5cf212]::context::EarlyContext as rustc_lint[b367858a0e5cf212]::contex
+t::LintContext>::opt_span_lint::<rustc_error_messages[e2cdca4141a2e612]::MultiSpan, 
+rustc_lint[b367858a0e5cf212]::early::diagnostics::DecorateBuiltinLint>
+  25:     0x7592f9d8a8e2 - <rustc_lint[b367858a0e5cf212]::early::EarlyContextAndPass<rustc_lint[b367858a0e5cf212]::earl
+y::RuntimeCombinedEarlyLintPass> as rustc_ast[482c157ff692ff1a]::visit::Visitor>::visit_id
+  26:     0x7592f9d208ac - 
+rustc_ast[482c157ff692ff1a]::visit::walk_item_inner::<rustc_ast[482c157ff692ff1a]::ast::ItemKind, rustc_lint[b367858a0e
+5cf212]::early::EarlyContextAndPass<rustc_lint[b367858a0e5cf212]::early::RuntimeCombinedEarlyLintPass>>
+  27:     0x7592f9d8a754 - <rustc_lint[b367858a0e5cf212]::early::EarlyContextAndPass<rustc_lint[b367858a0e5cf212]::earl
+y::RuntimeCombinedEarlyLintPass> as rustc_ast[482c157ff692ff1a]::visit::Visitor>::visit_item
+  28:     0x7592f9d20989 - 
+rustc_ast[482c157ff692ff1a]::visit::walk_item_inner::<rustc_ast[482c157ff692ff1a]::ast::ItemKind, rustc_lint[b367858a0e
+5cf212]::early::EarlyContextAndPass<rustc_lint[b367858a0e5cf212]::early::RuntimeCombinedEarlyLintPass>>
+  29:     0x7592f9d8a754 - <rustc_lint[b367858a0e5cf212]::early::EarlyContextAndPass<rustc_lint[b367858a0e5cf212]::earl
+y::RuntimeCombinedEarlyLintPass> as rustc_ast[482c157ff692ff1a]::visit::Visitor>::visit_item
+  30:     0x7592f9d2a9e3 - rustc_lint[b367858a0e5cf212]::early::check_ast_node_inner::<rustc_lint[b367858a0e5cf212]::ea
+rly::RuntimeCombinedEarlyLintPass, (&rustc_ast[482c157ff692ff1a]::ast::Crate, 
+&[rustc_ast[482c157ff692ff1a]::ast::Attribute])>
+  31:     0x7592fc2ce812 - rustc_interface[983d4ab689a8af78]::passes::early_lint_checks
+  32:     0x7592fc26a489 - rustc_query_impl[6bc9255307f367d2]::execution::try_execute_query::<rustc_middle[c35a94ff89e6
+a300]::query::caches::SingleCache<rustc_middle[c35a94ff89e6a300]::query::erase::ErasedData<[u8; 0usize]>>, false>
+  33:     0x7592fc26a1e9 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::early_lint_checks::execute_query_non_incr::__rust_end_short_backtrace
+  34:     0x7592fb9123d2 - rustc_ast_lowering[3be8416ccc90674]::lower_to_hir
+  35:     0x7592fc27102e - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::hir_crate::invoke_provider_fn::__rust_begin_short_backtrace
+  36:     0x7592fc269760 - rustc_query_impl[6bc9255307f367d2]::execution::try_execute_query::<rustc_middle[c35a94ff89e6
+a300]::query::caches::SingleCache<rustc_middle[c35a94ff89e6a300]::query::erase::ErasedData<[u8; 8usize]>>, false>
+  37:     0x7592fc268839 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::hir_crate::execute_query_non_incr::__rust_end_short_backtrace
+  38:     0x7592fc77f724 - rustc_query_impl[6bc9255307f367d2]::query_impl::opt_hir_owner_nodes::invoke_provider_fn::__r
+ust_begin_short_backtrace.warm
+  39:     0x7592fb149426 - rustc_query_impl[6bc9255307f367d2]::execution::try_execute_query::<rustc_data_structures[b3a
+4cc9128e9b440]::vec_cache::VecCache<rustc_span[d343c51ad9008c07]::def_id::LocalDefId, 
+rustc_middle[c35a94ff89e6a300]::query::erase::ErasedData<[u8; 8usize]>, 
+rustc_middle[c35a94ff89e6a300]::dep_graph::graph::DepNodeIndex>, false>
+  40:     0x7592fb1490c5 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::opt_hir_owner_nodes::execute_query_non_incr::__rust_end_short_backtrace
+  41:     0x7592fb93caae - <rustc_middle[c35a94ff89e6a300]::ty::context::TyCtxt>::hir_owner_node
+  42:     0x7592fc4a88ab - rustc_middle[c35a94ff89e6a300]::hir::map::hir_crate_items
+  43:     0x7592fc26f5a5 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::hir_crate_items::invoke_provider_fn::__rust_begin_short_backtrace
+  44:     0x7592fc269760 - rustc_query_impl[6bc9255307f367d2]::execution::try_execute_query::<rustc_middle[c35a94ff89e6
+a300]::query::caches::SingleCache<rustc_middle[c35a94ff89e6a300]::query::erase::ErasedData<[u8; 8usize]>>, false>
+  45:     0x7592fc2685b9 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::hir_crate_items::execute_query_non_incr::__rust_end_short_backtrace
+  46:     0x7592fb14a718 - rustc_interface[983d4ab689a8af78]::passes::analysis
+  47:     0x7592fc26a489 - rustc_query_impl[6bc9255307f367d2]::execution::try_execute_query::<rustc_middle[c35a94ff89e6
+a300]::query::caches::SingleCache<rustc_middle[c35a94ff89e6a300]::query::erase::ErasedData<[u8; 0usize]>>, false>
+  48:     0x7592fc26a0f5 - 
+rustc_query_impl[6bc9255307f367d2]::query_impl::analysis::execute_query_non_incr::__rust_end_short_backtrace
+  49:     0x7592fc2393b8 - rustc_interface[983d4ab689a8af78]::interface::run_compiler::<(), 
+rustc_driver_impl[452c8c91aaa6866a]::run_compiler::{closure#0}>::{closure#1}
+  50:     0x7592fc21e37e - std[8df389e468092df2]::sys::backtrace::__rust_begin_short_backtrace::<rustc_interface[983d4a
+b689a8af78]::util::run_in_thread_with_globals<rustc_interface[983d4ab689a8af78]::util::run_in_thread_pool_with_globals<
+rustc_interface[983d4ab689a8af78]::interface::run_compiler<(), 
+rustc_driver_impl[452c8c91aaa6866a]::run_compiler::{closure#0}>::{closure#1}, ()>::{closure#0}, 
+()>::{closure#0}::{closure#0}, ()>
+  51:     0x7592fc21ec20 - <std[8df389e468092df2]::thread::lifecycle::spawn_unchecked<rustc_interface[983d4ab689a8af78]
+::util::run_in_thread_with_globals<rustc_interface[983d4ab689a8af78]::util::run_in_thread_pool_with_globals<rustc_inter
+face[983d4ab689a8af78]::interface::run_compiler<(), 
+rustc_driver_impl[452c8c91aaa6866a]::run_compiler::{closure#0}>::{closure#1}, ()>::{closure#0}, 
+()>::{closure#0}::{closure#0}, ()>::{closure#1} as 
+core[8d30425dc6831f26]::ops::function::FnOnce<()>>::call_once::{shim:vtable#0}
+  52:     0x7592fc21faac - <std[8df389e468092df2]::sys::thread::unix::Thread>::new::thread_start
+  53:     0x7592f5a9caa4 - <unknown>
+  54:     0x7592f5b29c6c - <unknown>
+  55:                0x0 - <unknown>
+
+error: the compiler unexpectedly panicked. This is a bug
+
+note: we would appreciate a bug report: 
+https://github.com/rust-lang/rust/issues/new?labels=C-bug%2C+I-ICE%2C+T-compiler&template=ice.md
+
+note: please make sure that you have updated to the latest nightly
+
+note: please attach the file at 
+`/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/rustc-ice-2026-05-03T18_22_15-51341.txt` to your bug report
+
+note: rustc 1.96.0-nightly (3645249d7 2026-03-16) running on x86_64-unknown-linux-gnu
+
+note: compiler flags: --crate-type bin -C opt-level=3 -C panic=abort -C embed-bitcode=no -C strip=debuginfo -Z 
+unstable-options -C target-feature=-redzone -C link-arg=-Tlinker.ld -C relocation-model=static
+
+note: some of the compiler flags provided by cargo are hidden
+
+query stack during panic:
+#0 [early_lint_checks] perform lints prior to AST lowering
+#1 [hir_crate] getting the crate HIR
+... and 3 other queries... use `env RUST_BACKTRACE=1` to see the full query stack
+warning: `kernel` (bin "kernel") generated 2 warnings
+error: could not compile `kernel` (bin "kernel"); 2 warnings emitted
+
+Caused by:
+  process didn't exit successfully: `/home/zodai/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc 
+--crate-name kernel --edition=2021 src/main.rs --error-format=json 
+--json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C opt-level=3 -C 
+panic=abort -C embed-bitcode=no --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C 
+metadata=0c664a970e01060c -C extra-filename=-deb79ab5ffc01a74 --out-dir 
+/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps --target 
+x86_64-unknown-none -C strip=debuginfo -L 
+dependency=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps -L 
+dependency=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/release/deps --extern acpi=/mnt/c/Users/zodai/OneD
+rive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libacpi-115b9888ac7cd4f4.rlib --extern 'noprelude,n
+ounused:alloc=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/liballoc-6b847
+7209bfc0bca.rlib' --extern 'noprelude,nounused:compiler_builtins=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/tar
+get/x86_64-unknown-none/release/deps/libcompiler_builtins-a8209bbd6bdc55ab.rlib' --extern conquer_once=/mnt/c/Users/zod
+ai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libconquer_once-6d9001394bcbc0bf.rlib 
+--extern 'noprelude,nounused:core=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release
+/deps/libcore-fe30bcad63e9ed51.rlib' --extern crossbeam_queue=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target
+/x86_64-unknown-none/release/deps/libcrossbeam_queue-44e081f145fb9cd4.rlib --extern futures_util=/mnt/c/Users/zodai/One
+Drive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libfutures_util-f5e9921768284bdd.rlib --extern laz
+y_static=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/liblazy_static-f939
+5d32d76c8013.rlib --extern pc_keyboard=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/re
+lease/deps/libpc_keyboard-2ecbfba8dc4f9833.rlib --extern pic8259=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/tar
+get/x86_64-unknown-none/release/deps/libpic8259-d0f605800d972aed.rlib --extern spin=/mnt/c/Users/zodai/OneDrive/Desktop
+/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libspin-3d195fe6833cfdaa.rlib --extern uart_16550=/mnt/c/Users/
+zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libuart_16550-5539a343a1327ffc.rlib 
+--extern volatile=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/release/deps/libvolatil
+e-69bf743608e9cbe7.rlib --extern x86_64=/mnt/c/Users/zodai/OneDrive/Desktop/MYNEWOS/kernel/target/x86_64-unknown-none/r
+elease/deps/libx86_64-7769b2da3ff98bd5.rlib -Z unstable-options -C target-feature=-redzone -C link-arg=-Tlinker.ld -C 
+relocation-model=static` (exit status: 101)
+make: *** [Makefile:27: build/KERNEL.BIN] Error 101

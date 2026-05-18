@@ -47,13 +47,27 @@ Focus: Making the OS usable for real applications.
 - [x] The Shell: Interactive `>` prompt with `ls`, `cat`, `cap`, `run`, `help`, `uname`, `clear`.
 - [x] cap Text Editor: Full-screen VGA editor with line numbers, cursor, arrow keys, F2/Ctrl+S save, Esc quit.
 
-## Phase 7: Beyond (📍 WE ARE HERE)
+## Phase 7: Processes & IPC (Completed)
 - [x] ELF Binary Loader: Parse and load standard ELF executables from disk into user space.
 - [x] Process Isolation: Separate virtual address spaces per process using new page tables.
-- [/] Signals & IPC: Kill (done), wait, pipes between processes.
-- [ ] Network Stack: RTL8139 / VirtIO driver, ARP, IP, UDP, TCP.
+- [x] Preemptive Multitasking: Per-core Round-Robin scheduler handling isolated Ring 3 processes.
+- [x] Inter-Process Communication (IPC): File Descriptor table, `SYS_SPAWN` process cloning, and Ring-Buffer Pipes with Yieldless Blocking.
+- [x] Signals & Termination: `SYS_KILL`, `SYS_EXIT`, and `#GP` fault recovery avoiding kernel panics.
+
+## Phase 8: Beyond (📍 WE ARE HERE)
+- [x] Network Stack: RTL8139 / VirtIO driver, ARP, IP, UDP, TCP.
+- [x] Graphics Engine: VESA/VBE framebuffer, pixel drawing, 8×8 bitmap font, fill_rect, clear.
 - [ ] ext2 Filesystem: A real Linux-compatible filesystem.
-- [ ] Port a C standard library (newlib/musl) to run real programs.
+- [x] Advanced Memory Management: User-space dynamic memory mapping (`mmap` / `sbrk`).
+- [x] Port a C standard library (newlib/musl) to run real programs (Implemented custom libc).
+
+## Phase 9: The DOOM Milestone 🎮
+- [x] System Call Translation: Map POSIX `open`, `read`, `write`, `lseek`, `mmap` to our MYNEWOS syscalls.
+- [x] Keyboard Input: Implement `SYS_GETKEY` to pass raw scancodes to user-space.
+- [x] Port `doomgeneric`: Compile the DOOM source code against our C library.
+- [x] Load `DOOM1.WAD`: WAD is bundled into the disk image and loaded by the engine.
+- [x] Render the Framebuffer: Blit DOOM's internal pixel buffer to our VESA Graphics Engine.
+- [x] IT RUNS DOOM!
 
 ---
 *Reference: This roadmap is heavily inspired by modern Rust bare-metal development patterns, like those found in [Phil Opp's Writing an OS in Rust](https://os.phil-opp.com/).*

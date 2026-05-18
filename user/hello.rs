@@ -43,5 +43,5 @@ fn sys_exit(code: i64) -> ! {
 
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
-    loop {}
+    sys_exit(1);
 }
